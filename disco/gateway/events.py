@@ -2,12 +2,13 @@ from __future__ import print_function
 
 import six
 
-from disco.types.user import User, Presence
-from disco.types.channel import Channel, PermissionOverwrite
-from disco.types.message import Message, MessageReactionEmoji
-from disco.types.voice import VoiceState
-from disco.types.guild import Guild, GuildMember, Role, GuildEmoji
 from disco.types.base import Model, ModelMeta, Field, ListField, AutoDictField, snowflake, datetime
+from disco.types.channel import Channel, PermissionOverwrite
+from disco.types.guild import Guild, GuildMember, Role, GuildEmoji
+from disco.types.interaction import Interaction
+from disco.types.message import Message, MessageReactionEmoji
+from disco.types.user import User, Presence
+from disco.types.voice import VoiceState
 from disco.util.string import underscore
 
 # Mapping of discords event name to our event classes
@@ -736,6 +737,37 @@ class MessageReactionRemoveEmoji(GatewayEvent):
     channel_id = Field(snowflake)
     message_id = Field(snowflake)
     emoji = Field(MessageReactionEmoji)
+
+    @property
+    def channel(self):
+        return self.client.state.channels.get(self.channel_id)
+
+    @property
+    def guild(self):
+        return self.channel.guild
+
+
+@wraps_model(Interaction)
+class InteractionCreate(GatewayEvent):
+    '''
+    Sent when a user has triggered an interaction.
+    Attributes
+    ----------
+    id : Snowflake
+        The interaction id
+    type : :class:`disco.types.interaction.InteractionType`
+        The type of interaction
+    data : :class:`disco.types.interaction.ApplicationCommandInteractionData`
+        The data associated with interactions of type application command
+    guild_id : Snowflake
+        The guild ID the message is in.
+    channel_id : Snowflake
+        The channel ID the message is in.
+    member : list[:class:`disco.types.guild.GuildMember`]
+        The member who invoked the interaction
+    token : str
+        The interaction token
+    '''
 
     @property
     def channel(self):

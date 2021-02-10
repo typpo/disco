@@ -133,6 +133,10 @@ class Routes(object):
     WEBHOOKS_TOKEN_DELETE = (HTTPMethod.DELETE, WEBHOOKS + '/{token}')
     WEBHOOKS_TOKEN_EXECUTE = (HTTPMethod.POST, WEBHOOKS + '/{token}')
 
+    # Interactions
+    INTERACTIONS = '/interactions'
+    INTERACTIONS_CREATE_RESPONSE = (HTTPMethod.POST, INTERACTIONS + '/{id}/{token}/callback')
+
 
 class APIResponse(object):
     def __init__(self):

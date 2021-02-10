@@ -560,3 +560,13 @@ class APIClient(LoggingClass):
 
         if wait:
             return Message.create(self.client, obj.json())
+
+    def interactions_create_response(self, interaction_id, token, response_type, data):
+        self.http(
+            Routes.INTERACTIONS_CREATE_RESPONSE,
+            dict(id=interaction_id, token=token),
+            json={
+                'type': response_type.value,
+                'data': data,
+            }
+        )
