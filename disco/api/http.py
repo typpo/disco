@@ -135,7 +135,17 @@ class Routes(object):
 
     # Interactions
     INTERACTIONS = '/interactions'
-    INTERACTIONS_CREATE_RESPONSE = (HTTPMethod.POST, INTERACTIONS + '/{id}/{token}/callback')
+    INTERACTIONS_WEBHOOK = '/webhooks/{application_id}/{token}'
+    INTERACTIONS_CREATE_RESPONSE = (HTTPMethod.POST, INTERACTIONS + '/{interaction_id}/{token}/callback')
+    INTERACTIONS_EDIT_RESPONSE = (HTTPMethod.PATCH, INTERACTIONS_WEBHOOK + '/messages/@original')
+    INTERACTIONS_DELETE_RESPONSE = (HTTPMethod.DELETE, INTERACTIONS_WEBHOOK + '/messages/@original')
+    INTERACTIONS_CREATE_FOLLOWUP = (HTTPMethod.POST, INTERACTIONS_WEBHOOK)
+    INTERACTIONS_EDIT_FOLLOWUP = (HTTPMethod.PATCH, INTERACTIONS_WEBHOOK + '/messages/{message_id}')
+    INTERACTIONS_DELETE_FOLLOWUP = (HTTPMethod.DELETE, INTERACTIONS_WEBHOOK + '/messages/{message_id}')
+
+    # Oauth
+    OAUTH = '/oauth2'
+    OAUTH_ME = (HTTPMethod.GET, OAUTH + '/@me')
 
 
 class APIResponse(object):

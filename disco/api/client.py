@@ -564,9 +564,87 @@ class APIClient(LoggingClass):
     def interactions_create_response(self, interaction_id, token, response_type, data):
         self.http(
             Routes.INTERACTIONS_CREATE_RESPONSE,
-            dict(id=interaction_id, token=token),
+            dict(interaction_id=interaction_id, token=token),
             json={
                 'type': response_type.value,
                 'data': data,
             }
         )
+
+    def interactions_edit_response(
+            self,
+            application_id,
+            token,
+            content=None,
+            embeds=None,
+            allowed_mentions=None,
+    ):
+        self.http(
+            Routes.INTERACTIONS_EDIT_RESPONSE,
+            dict(application_id=application_id, token=token),
+            json=optional({
+                'content': content,
+                'embeds': embeds,
+                'allowed_mentions': allowed_mentions,
+            })
+        )
+
+    def interactions_delete_response(self, application_id, token):
+        self.http(
+            Routes.INTERACTIONS_DELETE_RESPONSE,
+            dict(application_id=application_id, token=token)
+        )
+
+    def interactions_create_followup(
+            self,
+            application_id,
+            token,
+            content=None,
+            embeds=None,
+            username=None,
+            avatar_url=None,
+            tts=None,
+            file_content=None,
+            allowed_mentions=None
+    ):
+        self.http(
+            Routes.INTERACTIONS_CREATE_FOLLOWUP,
+            dict(application_id=application_id, token=token),
+            json=optional({
+                'content': content,
+                'embeds': embeds,
+                'allowed_mentions': allowed_mentions,
+                'username': username,
+                'avatar_url': avatar_url,
+                'tts': tts,
+                'file': file_content,
+            })
+        )
+
+    def interactions_edit_followup(
+            self,
+            application_id,
+            message_id,
+            token,
+            content=None,
+            embeds=None,
+            allowed_mentions=None
+    ):
+        self.http(
+            Routes.INTERACTIONS_EDIT_FOLLOWUP,
+            dict(application_id=application_id, message_id=message_id, token=token),
+            json=optional({
+                'content': content,
+                'embeds': embeds,
+                'allowed_mentions': allowed_mentions,
+            })
+        )
+
+    def interactions_delete_followup(self, application_id, message_id, token):
+        self.http(
+            Routes.INTERACTIONS_DELETE_FOLLOWUP,
+            dict(application_id=application_id, message_id=message_id, token=token)
+        )
+
+    def oauth_me(self):
+        self.http(Routes.OAUTH_ME)

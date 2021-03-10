@@ -1,7 +1,8 @@
 from holster.enum import Enum
 
+from disco.api.client import APIClient
 from disco.types.base import (
-    SlottedModel, Field, ListField, snowflake
+    SlottedModel, Field, ListField, snowflake, cached_property
 )
 from disco.types.guild import GuildMember
 
@@ -53,8 +54,60 @@ class Interaction(SlottedModel):
     token = Field(str)
     version = Field(int)
 
-    def create_response(self, interaction_response_type, data):
-        from disco.api.client import APIClient
+    def __init__(self):
         if self.client is None:
             self.client = APIClient(None)
+
+    @cached_property
+    def application_id(self):
+        resp = self.client.api.oauth_me()
+
+    def create_response(self, interaction_response_type, data):
         self.client.api.interactions_create_response(self.id, self.token, interaction_response_type, data)
+
+    def edit_response(self, content=None, embeds=None, allowed_mentions=None):
+        self.client.api.interactions_edit_response(self.id, self.token, content, embeds, allowed_mentions)
+
+    def delete_response(self):
+        self.client.api.interactions_delete_response(self.id, self.token)
+
+    def create_followup(
+        self,
+        content=None,
+        embeds=None,
+        username=None,
+        avatar_url=None,
+        tts=None,
+        file_content=None,
+        allowed_mentions=None
+    ):
+        self.client.api.interactions_create_followup(
+            application_id,
+            self.token,
+            content,
+            embeds,
+            username,
+            avatar_url,
+            tts,
+            file_content,
+            allowed_mentions
+        )
+
+    def edit_followup(
+        self,
+        message,
+        content=None,
+        embeds=None,
+        allowed_mentions=None
+    ):
+        self.client.api.interactions_edit_followup(
+            application_id,
+            message.id,
+            self.token,
+            content,
+            embeds,
+            allowed_mentions
+        )
+
+    def delete_followup(self, message):
+        self.client.api.interactions_delete_followup(application_id, message.id, self.token)
