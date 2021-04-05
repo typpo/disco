@@ -14,10 +14,8 @@ InteractionType = Enum(
 
 InteractionResponseType = Enum(
     PONG=1,
-    ACKNOWLEDGE=2,
-    CHANNEL_MESSAGE=3,
     CHANNEL_MESSAGE_WITH_SOURCE=4,
-    ACKNOWLEDGE_WITH_SOURCE=5,
+    DEFERRED_CHANNEL_MESSAGE_WITH_SOURCE=5,
 )
 
 ApplicationCommandOptionType = Enum(
@@ -60,7 +58,8 @@ class Interaction(SlottedModel):
 
     @cached_property
     def application_id(self):
-        resp = self.client.api.oauth_me()
+        resp = self.client.api.oauth_applications_me()
+        return resp['id']
 
     def create_response(self, interaction_response_type, data):
         self.client.api.interactions_create_response(self.id, self.token, interaction_response_type, data)
@@ -82,7 +81,7 @@ class Interaction(SlottedModel):
         allowed_mentions=None
     ):
         self.client.api.interactions_create_followup(
-            application_id,
+            self.application_id,
             self.token,
             content,
             embeds,
@@ -101,7 +100,7 @@ class Interaction(SlottedModel):
         allowed_mentions=None
     ):
         self.client.api.interactions_edit_followup(
-            application_id,
+            self.application_id,
             message.id,
             self.token,
             content,
@@ -110,4 +109,4 @@ class Interaction(SlottedModel):
         )
 
     def delete_followup(self, message):
-        self.client.api.interactions_delete_followup(application_id, message.id, self.token)
+        self.client.api.interactions_delete_followup(self.application_id, message.id, self.token)

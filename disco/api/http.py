@@ -145,7 +145,7 @@ class Routes(object):
 
     # Oauth
     OAUTH = '/oauth2'
-    OAUTH_ME = (HTTPMethod.GET, OAUTH + '/@me')
+    OAUTH_APPLICATIONS_ME = (HTTPMethod.GET, OAUTH + '/applications/@me')
 
 
 class APIResponse(object):

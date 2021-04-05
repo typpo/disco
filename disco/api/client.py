@@ -646,5 +646,5 @@ class APIClient(LoggingClass):
             dict(application_id=application_id, message_id=message_id, token=token)
         )
 
-    def oauth_me(self):
-        self.http(Routes.OAUTH_ME)
+    def oauth_applications_me(self):
+        self.http(Routes.OAUTH_APPLICATIONS_ME)
